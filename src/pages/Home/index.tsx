@@ -1,9 +1,14 @@
+import { useContext } from "react";
 import { Header } from "../../components/Header";
 import { Search } from "../../components/Search";
 import { Summary } from "../../components/Summary";
 import { SpanPrice, TransactionsContainer, TransactionsTable } from "./styles";
+import { TransactionsContext } from "../../contexts/TransactionsContext";
+import { dateFormatter, priceFormatter } from "../../utils/formatter";
 
 export function Home() {
+  const { transactions } = useContext(TransactionsContext);
+
   return (
     <div>
       <Header />
@@ -12,22 +17,19 @@ export function Home() {
         <Search />
         <TransactionsTable>
           <tbody>
-            <tr>
-              <td width={"50%"}>Desenvolvimento de site</td>
-              <td>
-                <SpanPrice variant="income">R$ 12.000,00</SpanPrice>
-              </td>
-              <td>Venda</td>
-              <td>13/06/2023</td>
-            </tr>
-            <tr>
-              <td width={"50%"}>Praia</td>
-              <td>
-                <SpanPrice variant="outcome">- R$ 450,00</SpanPrice>
-              </td>
-              <td>Viagem</td>
-              <td>20/06/2023</td>
-            </tr>
+            {transactions.map((transaction) => (
+              <tr key={transaction.id}>
+                <td width={"50%"}>{transaction.description}</td>
+                <td>
+                  <SpanPrice variant={transaction.type}>
+                    {transaction.type === "outcome" && "- "}
+                    {priceFormatter.format(transaction.price)}
+                  </SpanPrice>
+                </td>
+                <td>{transaction.category}</td>
+                <td>{dateFormatter.format(new Date(transaction.createdAt))}</td>
+              </tr>
+            ))}
           </tbody>
         </TransactionsTable>
       </TransactionsContainer>
