@@ -1,11 +1,11 @@
-import { useContext } from 'react'
-import { MagnifyingGlass } from 'phosphor-react'
 import * as zod from 'zod'
+import { MagnifyingGlass } from 'phosphor-react'
 import { useForm } from 'react-hook-form'
+import { useContextSelector } from 'use-context-selector'
 import { zodResolver } from '@hookform/resolvers/zod'
 
+import { TransactionsContext } from '../../../../contexts/TransactionsContext'
 import { SearchContainer } from './styles'
-import { TransactionsContext } from '../../contexts/TransactionsContext'
 
 const searchFormSchema = zod.object({
   query: zod.string(),
@@ -22,7 +22,9 @@ export function Search() {
     resolver: zodResolver(searchFormSchema),
   })
 
-  const { getTransactions } = useContext(TransactionsContext)
+  const getTransactions = useContextSelector(TransactionsContext, (context) => {
+    return context.getTransactions
+  })
 
   async function handleSearch(data: searchType) {
     await getTransactions(data.query)

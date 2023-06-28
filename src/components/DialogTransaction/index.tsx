@@ -1,13 +1,11 @@
 import * as Dialog from '@radix-ui/react-dialog'
 import { Close, Content, Overlay, TransactionType, TypeButton } from './styles'
 import { ArrowCircleDown, ArrowCircleUp, X } from 'phosphor-react'
-import { useContext } from 'react'
+import { useContextSelector } from 'use-context-selector'
 import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as zod from 'zod'
 import { TransactionsContext } from '../../contexts/TransactionsContext'
-import { dateFormatter } from '../../utils/formatter'
-import { api } from '../../lib/axios'
 
 const transactionSchema = zod.object({
   description: zod.string(),
@@ -19,14 +17,17 @@ const transactionSchema = zod.object({
 type TransactionFormType = zod.infer<typeof transactionSchema>
 
 export function DialogTransaction() {
-  const { createTransaction } = useContext(TransactionsContext)
+  const createTransaction = useContextSelector(
+    TransactionsContext,
+    (context) => {
+      return context.createTransaction
+    },
+  )
 
   const {
     register,
     handleSubmit,
     control,
-    getValues,
-    setValue,
     reset,
     formState: { isSubmitting },
   } = useForm<TransactionFormType>({
@@ -47,7 +48,6 @@ export function DialogTransaction() {
     })
 
     reset()
-    console.log('POST IN COMPONENT')
   }
 
   return (
@@ -84,7 +84,6 @@ export function DialogTransaction() {
             control={control}
             name="type"
             render={({ field }) => {
-              console.log(field)
               return (
                 <TransactionType
                   onValueChange={(e: 'income' | 'outcome') => field.onChange(e)}
@@ -103,7 +102,9 @@ export function DialogTransaction() {
             }}
           />
 
-          <button type="submit" children="Cadastrar" disabled={isSubmitting} />
+          <button type="submit" disabled={isSubmitting}>
+            Cadastrar
+          </button>
         </form>
       </Content>
     </Dialog.Portal>
