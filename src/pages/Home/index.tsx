@@ -1,13 +1,14 @@
-import { useContext } from "react";
-import { Header } from "../../components/Header";
-import { Search } from "../../components/Search";
-import { Summary } from "../../components/Summary";
-import { SpanPrice, TransactionsContainer, TransactionsTable } from "./styles";
-import { TransactionsContext } from "../../contexts/TransactionsContext";
-import { dateFormatter, priceFormatter } from "../../utils/formatter";
+import { useContext } from 'react'
+import { Header } from '../../components/Header'
+import { Search } from '../../components/Search'
+import { Summary } from '../../components/Summary'
+import { SpanPrice, TransactionsContainer, TransactionsTable } from './styles'
+import { TransactionsContext } from '../../contexts/TransactionsContext'
+import { dateFormatter, priceFormatter } from '../../utils/formatter'
 
 export function Home() {
-  const { transactions } = useContext(TransactionsContext);
+  const { transactions } = useContext(TransactionsContext)
+  console.log('transactions')
 
   return (
     <div>
@@ -19,10 +20,10 @@ export function Home() {
           <tbody>
             {transactions.map((transaction) => (
               <tr key={transaction.id}>
-                <td width={"50%"}>{transaction.description}</td>
+                <td width={'50%'}>{transaction.description}</td>
                 <td>
                   <SpanPrice variant={transaction.type}>
-                    {transaction.type === "outcome" && "- "}
+                    {transaction.type === 'outcome' && '- '}
                     {priceFormatter.format(transaction.price)}
                   </SpanPrice>
                 </td>
@@ -34,5 +35,5 @@ export function Home() {
         </TransactionsTable>
       </TransactionsContainer>
     </div>
-  );
+  )
 }

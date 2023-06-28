@@ -1,73 +1,66 @@
-import {
-  createContext,
-  ReactNode,
-  useState,
-  useEffect,
-  Dispatch,
-  SetStateAction,
-} from "react";
-import { api } from "../lib/axios";
+import { createContext, useState, useEffect, ReactNode } from 'react'
+import { api } from '../lib/axios'
 
 interface TransactionProps {
-  id: number;
-  description: string;
-  type: "income" | "outcome";
-  category: string;
-  price: number;
-  createdAt: string;
+  id: number
+  description: string
+  type: 'income' | 'outcome'
+  category: string
+  price: number
+  createdAt: string
 }
 interface CreateTransactionProps {
-  description: string;
-  type: "income" | "outcome";
-  category: string;
-  price: number;
+  description: string
+  type: 'income' | 'outcome'
+  category: string
+  price: number
 }
 
 interface TransactionContextType {
-  transactions: TransactionProps[];
-  getTransactions: (query?: string) => Promise<void>;
-  createTransaction: (data: CreateTransactionProps) => Promise<void>;
+  transactions: TransactionProps[]
+  getTransactions: (query?: string) => Promise<void>
+  createTransaction: (data: CreateTransactionProps) => Promise<void>
 }
 
 interface ProviderProps {
-  children: ReactNode;
+  children: ReactNode
 }
 
-export const TransactionsContext = createContext({} as TransactionContextType);
+export const TransactionsContext = createContext({} as TransactionContextType)
 
 export function TransactionsProvider({ children }: ProviderProps) {
-  const [transactions, setTransactions] = useState<TransactionProps[]>([]);
+  const [transactions, setTransactions] = useState<TransactionProps[]>([])
 
   async function getTransactions(query?: string) {
-    const data = await api.get("/transactions", {
+    const data = await api.get('/transactions', {
       params: {
-        _sort: "createdAt",
-        _order: "desc",
+        _sort: 'createdAt',
+        _order: 'desc',
         q: query,
       },
-    });
+    })
 
-    setTransactions(data.data);
-    console.log("request");
+    setTransactions(data.data)
+    console.log('request')
   }
 
   async function createTransaction(data: CreateTransactionProps) {
-    const { category, description, price, type } = data;
+    const { category, description, price, type } = data
 
-    const response = await api.post("/transactions", {
+    const response = await api.post('/transactions', {
       category,
       description,
       price,
       type,
       createdAt: new Date(),
-    });
+    })
 
-    setTransactions((state) => [response.data, ...state]);
-    console.log("POST IN CONTEXT");
+    setTransactions((state) => [response.data, ...state])
+    console.log('POST IN CONTEXT')
   }
   useEffect(() => {
-    getTransactions();
-  }, []);
+    getTransactions()
+  }, [])
 
   return (
     <TransactionsContext.Provider
@@ -75,5 +68,5 @@ export function TransactionsProvider({ children }: ProviderProps) {
     >
       {children}
     </TransactionsContext.Provider>
-  );
+  )
 }

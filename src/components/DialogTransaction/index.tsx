@@ -1,25 +1,25 @@
-import * as Dialog from "@radix-ui/react-dialog";
-import { Close, Content, Overlay, TransactionType, TypeButton } from "./styles";
-import { ArrowCircleDown, ArrowCircleUp, X } from "phosphor-react";
-import { useContext } from "react";
-import { Controller, useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as zod from "zod";
-import { TransactionsContext } from "../../contexts/TransactionsContext";
-import { dateFormatter } from "../../utils/formatter";
-import { api } from "../../lib/axios";
+import * as Dialog from '@radix-ui/react-dialog'
+import { Close, Content, Overlay, TransactionType, TypeButton } from './styles'
+import { ArrowCircleDown, ArrowCircleUp, X } from 'phosphor-react'
+import { useContext } from 'react'
+import { Controller, useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import * as zod from 'zod'
+import { TransactionsContext } from '../../contexts/TransactionsContext'
+import { dateFormatter } from '../../utils/formatter'
+import { api } from '../../lib/axios'
 
 const transactionSchema = zod.object({
   description: zod.string(),
   price: zod.number(),
   category: zod.string(),
-  type: zod.enum(["income", "outcome"]),
-});
+  type: zod.enum(['income', 'outcome']),
+})
 
-type TransactionFormType = zod.infer<typeof transactionSchema>;
+type TransactionFormType = zod.infer<typeof transactionSchema>
 
 export function DialogTransaction() {
-  const { createTransaction } = useContext(TransactionsContext);
+  const { createTransaction } = useContext(TransactionsContext)
 
   const {
     register,
@@ -32,22 +32,22 @@ export function DialogTransaction() {
   } = useForm<TransactionFormType>({
     resolver: zodResolver(transactionSchema),
     defaultValues: {
-      type: "income",
+      type: 'income',
     },
-  });
+  })
 
   async function handleTransaction(data: TransactionFormType) {
-    const { category, description, price, type } = data;
+    const { category, description, price, type } = data
 
     await createTransaction({
       category,
       description,
       price,
       type,
-    });
+    })
 
-    reset();
-    console.log("POST IN COMPONENT");
+    reset()
+    console.log('POST IN COMPONENT')
   }
 
   return (
@@ -65,29 +65,29 @@ export function DialogTransaction() {
             type="text"
             placeholder="Descrição"
             required
-            {...register("description")}
+            {...register('description')}
           />
           <input
             type="number"
             placeholder="Preço"
             required
-            {...register("price", { valueAsNumber: true })}
+            {...register('price', { valueAsNumber: true })}
           />
           <input
             type="text"
             placeholder="Categoria"
             required
-            {...register("category")}
+            {...register('category')}
           />
 
           <Controller
             control={control}
             name="type"
             render={({ field }) => {
-              console.log(field);
+              console.log(field)
               return (
                 <TransactionType
-                  onValueChange={(e: "income" | "outcome") => field.onChange(e)}
+                  onValueChange={(e: 'income' | 'outcome') => field.onChange(e)}
                   value={field.value}
                 >
                   <TypeButton color="income" value="income">
@@ -99,7 +99,7 @@ export function DialogTransaction() {
                     Saída
                   </TypeButton>
                 </TransactionType>
-              );
+              )
             }}
           />
 
@@ -107,5 +107,5 @@ export function DialogTransaction() {
         </form>
       </Content>
     </Dialog.Portal>
-  );
+  )
 }

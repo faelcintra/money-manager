@@ -1,8 +1,8 @@
-import * as Dialog from "@radix-ui/react-dialog";
+import * as Dialog from '@radix-ui/react-dialog'
 
-import { HeaderContainer, HeaderContent, TransactionButton } from "./styles";
-import logoImg from "../../assets/logo.svg";
-import { DialogTransaction } from "../DialogTransaction";
+import { HeaderContainer, HeaderContent, TransactionButton } from './styles'
+import logoImg from '../../assets/logo.svg'
+import { DialogTransaction } from '../DialogTransaction'
 
 export function Header() {
   return (
@@ -10,16 +10,16 @@ export function Header() {
       <HeaderContent>
         <div>
           <img src={logoImg} alt="logo" />
-          <strong children="Money Manager" />
+          <strong>Money Manager</strong>
         </div>
         <Dialog.Root>
           <Dialog.Trigger asChild>
-            <TransactionButton children={"Nova transação"} />
+            <TransactionButton>Nova transação</TransactionButton>
           </Dialog.Trigger>
 
           <DialogTransaction />
         </Dialog.Root>
       </HeaderContent>
     </HeaderContainer>
-  );
+  )
 }
